@@ -7,6 +7,48 @@
   <title>Document</title>
 </head>
 <body>
-  <h1> express static</h1>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  
+  <h1>Google Sign-In</h1>
+
+  <div id="g_id_onload"
+    data-client_id="587322075166-bsfgrv1imb45o9dervd5ttkd90vvo6fu.apps.googleusercontent.com"
+    data-callback="handleCredentialResponse"
+    data-auto_prompt="false">
+  </div>
+  <!--     data-login_uri="https://your.domain/your_login_endpoint" -->
+
+  <div class="g_id_signin"
+    data-type="standard"
+    data-size="large"
+    data-theme="outline"
+    data-text="sign_in_with"
+    data-shape="rectangular"
+    data-logo_alignment="left">
+  </div>
+
+  <script>
+    function handleCredentialResponse(response) {
+       // decodeJwtResponse() is a custom function defined by you
+       // to decode the credential response.
+       const token = { id_token: response.credential };
+
+
+       fetch('http://localhost:8080/api/auth/google', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(token)
+       })
+        .then( (res) => res.json() )
+        .then( (response) => {
+          console.log(response);
+        })
+
+
+    }
+  </script>
+  
 </body>
 </html>

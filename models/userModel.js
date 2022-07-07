@@ -3,16 +3,15 @@ const { Schema, model } = require('mongoose');
 const UserSchema = Schema({
     name: {
         type: String,
-        required: [true, 'El nombre es obligatorio']
+        required: [true, 'Name required']
     },
     email: {
         type: String,
-        required: [true, 'El correo es obligatorio'],
-        unique: true
+        required: [true, 'email required']
     },
     password: {
         type: String,
-        required: [true, 'La contraseña es obligatoria'],
+        required: [true, 'password required'],
     },
     state: {
         type: Boolean,
@@ -24,6 +23,10 @@ const UserSchema = Schema({
     },
 });
 
-
+UserSchema.methods.toJSON = function(){
+    const { __v, password, _id, ...others } = this.toObject();
+    others.uid = _id;
+    return others;
+};
 
 module.exports = model( 'User', UserSchema );

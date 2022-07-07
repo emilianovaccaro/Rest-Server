@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const AbmSchema = new Schema({
-  name: { type: String, required: [ true, 'agregar nombre del movimiento' ] },
-  description: { type: String, required: [ true, 'agregar descripción' ] },
-  typeOfMovement: { type: String, required: [ true, 'agregar tipo de movimiento'] },
-  amount: { type: Number, required: [ true, 'colocar el monto' ] },
-  googleId: { type: String, require: true }
+  name: { type: String, required: [ true, 'name required' ] },
+  description: { type: String, required: [ true, 'description required' ] },
+  typeOfMovement: { type: String, required: [ true, 'type required'] },
+  amount: { type: Number, required: [ true, 'amount required' ] },
+  googleId: { type: String, require: false }
 });
 
 module.exports = model('Abm', AbmSchema);
