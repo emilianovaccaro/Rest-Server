@@ -35,9 +35,8 @@ const loginControl = async ( req, res = response ) => {
 
   } catch ( error ) {
     console.log(error);
-
     res.status(500).json({
-      msg: 'Please contact the admin'
+      msg: 'Please contact us'
     });
   }
 }
@@ -47,16 +46,39 @@ const googleSignIn = async ( req, res = response ) => {
 
 
   try {
-    const googleUser = await googleVerify( id_token );
 
-    res.json({
-      msg: 'Valid Google Sign-In',
-      googleUser,
-      id_token
+    const { email, name } = await googleVerify( id_token );
+    let user = await User.findOne({ email })
+    //is there a user? !user => create one.
+    if ( !user ){
+      const data = {
+        name,
+        email, 
+        password: ':P1',
+        google: true
+      };
+      user = new User( data );
+      await user.save();
+    } 
+
+    //is the user state false/blocked in db?
+    if ( !user.state ){
+      return res.status(401).json({
+        msg: ' This user is no longer available, for more information please contact us '
+      });
+    }
+
+    //GENERATE JWT
+    const token = await genJWT( user.id );
+
+
+    return res.json({
+      user,
+      token
     });
 
   } catch (error) {
-    json.status(400).json({
+    return res.status(400).json({
       msg: 'Token not verified',
       error
     })
